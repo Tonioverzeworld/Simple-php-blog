@@ -1,28 +1,39 @@
 <?php
 
-namespace AAntonio\SimpleBlog\Modele;
-
 /**
  * Fournit les services d'accès aux genres musicaux 
  * 
  * @author Baptiste Pesquet
  */
+
+namespace AAntonio\SimpleBlog\Modele;
+
+use AAntonio\SimpleBlog\Modele\Entites\Commentaire;
+
 class CommentaireDAO extends Modele {
+
 
 // Renvoie la liste des commentaires associés à un billet
     public function getCommentaires($idBillet) {
-        $sql = 'select COM_ID as id, COM_DATE as date,'
-                . ' COM_AUTEUR as auteur, COM_CONTENU as contenu from T_COMMENTAIRE'
-                . ' where BIL_ID=?';
+    	$arrayCommmentaires = [];
+        $sql = 'select id, date,'
+                . ' auteur, contenu from T_COMMENTAIRE'
+                . ' where idBillet=?';
         $commentaires = $this->executerRequete($sql, array($idBillet));
-        return $commentaires;
+        foreach ($commentaires as $commentaire){
+        	$commentaireObjet = new Commentaire($commentaire);
+        	array_push($arrayCommmentaires, $commentaireObjet);
+        }
+
+        return $arrayCommmentaires;
     }
 
     // Ajoute un commentaire dans la base
-    public function ajouterCommentaire($auteur, $contenu, $idBillet) {
-        $sql = 'insert into T_COMMENTAIRE(COM_DATE, COM_AUTEUR, COM_CONTENU, BIL_ID)'
-            . ' values(?, ?, ?, ?)';
+    public function ajouterCommentaire(Commentaire $commentaire) {
+        $sql = 'insert into T_COMMENTAIRE(date, auteur, contenu, idBillet)'
+            . ' values(NOW(), ?, ?, ?)';
         $date = date(DATE_W3C);  // Récupère la date courante
-        $this->executerRequete($sql, array($date, $auteur, $contenu, $idBillet));
+        $resultat = $this->executerRequete($sql, array($commentaire->getAuteur(), $commentaire->getContenu(), $commentaire->getIdBillet()));
+        return $resultat;
     }
 }

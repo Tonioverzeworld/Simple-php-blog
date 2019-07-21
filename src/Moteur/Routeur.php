@@ -4,7 +4,7 @@ namespace AAntonio\SimpleBlog\Moteur;
 
 use AAntonio\SimpleBlog\Controleur\ControleurAccueil;
 use AAntonio\SimpleBlog\Controleur\ControleurBillet;
-
+use Exception;
 
 class Routeur {
 
@@ -20,7 +20,7 @@ class Routeur {
     public function routerRequete() {
         try {
             if (isset($_GET['action'])) {
-                if ($_GET['action'] == 'BilletDAO') {
+                if ($_GET['action'] == 'billet') {
                     $idBillet = intval($this->getParametre($_GET, 'id'));
                     if ($idBillet != 0) {
                         $this->ctrlBillet->billet($idBillet);
