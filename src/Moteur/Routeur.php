@@ -29,11 +29,15 @@ class Routeur {
                     else
                         throw new Exception("Identifiant de billet non valide");
                 }
-                else if ($_GET['action'] == 'commenter') {
+                else if ($_GET['action'] == 'ajoutCommentaire') {
                     $auteur = $this->getParametre($_POST, 'auteur');
                     $contenu = $this->getParametre($_POST, 'contenu');
                     $idBillet = $this->getParametre($_POST, 'id');
-                    $this->ctrlBillet->commenter($auteur, $contenu, $idBillet);
+                    $this->ctrlBillet->ajoutCommentaire($auteur, $contenu, $idBillet);
+                }
+                else if ($_GET['action'] == 'voirCommentaires'){
+	                $idBillet = $this->getParametre($_GET, 'id');
+	                $this->ctrlBillet->voirCommentairesAjax($idBillet);
                 }
                 else
                     throw new Exception("Action non valide");
